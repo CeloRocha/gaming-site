@@ -1,0 +1,14 @@
+.player{
+    display: flex;
+    padding: 2rem;
+    align-items: center;
+    justify-content: space-between;
+
+    h3, span{
+        font-size: 1.6rem;
+    }
+    svg{
+        width: 6.4rem;
+        height: 4rem;
+    }
+}

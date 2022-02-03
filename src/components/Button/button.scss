@@ -9,7 +9,7 @@
     font-family: 'Syne Tactile';
     font-size: 1.6rem;
     text-shadow: 2px 2px black;
-
+    cursor: pointer;
     &::before{
         z-index: -1;
         content: '';

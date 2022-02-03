@@ -1,0 +1,99 @@
+.auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    .login {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 30rem;
+        background: #3F3F3F;
+        border-radius: 4rem;
+        padding: 4rem;
+
+        header{
+            position: relative;
+            justify-content: flex-start;
+            gap: 1rem;
+            width: 100%;
+            .arrow{
+                width: 4rem;
+            }
+
+            h1{
+                font-size: 2.4rem;
+                font-family: 'Poppins';
+            }
+        }
+    }
+
+    .form-login {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        width: 100%;
+        input {
+            // background: rgba(100, 100, 100, 0.8);
+            outline: none;
+            background: transparent;
+            border-bottom: 1px solid #AAA;
+            
+            padding: 0.5rem;
+            font-size: 1.6rem;
+        }
+    }
+
+    p {
+        margin-top: 0.5rem;
+        font-size: 1.2rem;
+        text-align: center;
+
+        button{
+            background: transparent;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
+    .separator{
+        font-size: 14px;
+        color: #a8a8b3;
+        width: 100%;
+        margin: 24px 0;
+        display: flex;
+        align-items: center;
+
+        &::before{
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #a8a8b3;
+            margin-right: 8px;
+        }
+
+        &::after{
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #a8a8b3;
+            margin-left: 8px;
+        }
+    }
+
+    .googleLogin {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.5rem 2rem;
+        border-radius: 1rem;
+        background-image: linear-gradient(80deg, rgb(0, 100, 255), 48%, #FFF, 52%, rgb(0, 100, 255));
+        background-size: 300%;
+        background-position: left;
+        cursor: pointer;
+        &:hover{
+            background-position: right;
+            transition: 2s;
+        }
+    }
+}

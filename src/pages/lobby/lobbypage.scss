@@ -1,0 +1,55 @@
+.lobby-page{
+    display: grid;
+    grid-template-columns: 4fr 6fr;
+    height: 90vh;
+    margin: 2.5rem auto;
+    width: 90vw;
+    background: #2F2F2F;
+
+    .lobby-left{
+        flex: 4;
+        padding: 1rem;
+        border-right: 1px solid #AAA;
+
+        h2{
+            font-size: 3.2rem;
+            font-family: 'Syne Tactile';
+            padding: 1.5rem;
+            border-top: 1px solid #AAA;
+            border-bottom: 1px solid #AAA;
+        }
+    }
+    .lobbu-chat{
+        flex: 6;
+    }
+
+    .lobby-quit{
+        display: flex;
+        align-items: center;
+    }
+
+    .lobby-quitLink{
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        text-decoration: none;
+        img {
+            height: 3.2rem;
+        }
+        svg{
+            path{
+                transition: 1s;
+                fill: red;
+            }
+        }
+        span{
+            font-family: 'Poppins';
+            font-weight: 700;
+            font-size: 3.2rem;
+        }
+
+        &:hover > svg > path{
+            fill: greenyellow;
+        }
+    }
+}
