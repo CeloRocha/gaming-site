@@ -96,4 +96,17 @@
             transition: 2s;
         }
     }
+
+    .auth-img-1, .auth-img-2{
+        position: absolute;
+        width: 20rem;
+    }
+    .auth-img-1 {
+        top: 10rem;
+        transform: translateX(-35rem) rotateZ(-30deg);
+    }
+    .auth-img-2 {
+        bottom: 10rem;
+        transform: translateX(35rem) rotateZ(30deg);
+    }
 }

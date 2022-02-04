@@ -9,22 +9,29 @@
     font-family: 'Syne Tactile';
     font-size: 1.6rem;
     text-shadow: 2px 2px black;
+    text-align: center;
     cursor: pointer;
-    &::before{
-        z-index: -1;
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100%;
-        width: 250%;
-        background: linear-gradient(90deg, red, rgb(255, 125, 0), rgb(255,0, 0));
-        transition: 1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    background-image: linear-gradient(90deg, red, rgb(255, 125, 0), rgb(255,0, 0));
+    background-size: 250%;
+    background-position: left;
+    transition: 1s;
+
+    &:hover{
+        background-position: right;
     }
 
-    &:hover::before{
-        transform: translateX(-50%);
+    &.ready{
+        background-image: linear-gradient(45deg, #F10, 30%, #0064FF 50%, #00AAFF);
+    }
+    &.options{
+        background-image: linear-gradient(45deg, #000, #0064FF, rgb(0, 100, 255));
+        background-size: 250%;
+        padding: 1.2rem 3rem;
+        transition: 1s;
+        border-radius: 1rem;
     }
 }
-
-

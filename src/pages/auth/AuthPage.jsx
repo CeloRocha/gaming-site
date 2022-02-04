@@ -6,7 +6,8 @@ import goBackImg from '../../assets/images/BackArrow.svg'
 import Login from '../../components/Login/Login';
 import { useState } from 'react';
 import SignIn from '../../components/SignIn/SignIn';
-
+import controllerColoredImg from '../../assets/images/controllercolored.svg'
+import controllerNintendoImg from '../../assets/images/controllerNintendo.svg'
 const AuthPage = () => {
 
     const [ signUp, setSignUp ] = useState(false);
@@ -38,6 +39,8 @@ const AuthPage = () => {
                     <span>Login with Google</span>
                 </button>
             </div>
+            <img className='auth-img-1' src={controllerColoredImg} alt=''/>
+            <img className='auth-img-2' src={controllerNintendoImg} alt="" />
         </div>   
       )
 };
