@@ -1,6 +1,6 @@
 import React from 'react';
 import './AuthPage.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import googleImg from '../../assets/images/Google.svg'
 import goBackImg from '../../assets/images/BackArrow.svg'
 import Login from '../../components/Login/Login';
@@ -8,12 +8,25 @@ import { useState } from 'react';
 import SignIn from '../../components/SignIn/SignIn';
 import controllerColoredImg from '../../assets/images/controllercolored.svg'
 import controllerNintendoImg from '../../assets/images/controllerNintendo.svg'
+import { useAuth } from '../../hooks/useAuth';
 const AuthPage = () => {
 
+    const navigate = useNavigate();
     const [ signUp, setSignUp ] = useState(false);
+    const { user, signInWithGoogle } = useAuth();
 
     function handleSignStateChange (){
         setSignUp(prevSignUp => !prevSignUp)
+    }
+
+    async function handleGoogleButton(){
+        if(!user){
+            await signInWithGoogle()
+        }
+
+        navigate('/')
+
+
     }
 
     return(
@@ -34,8 +47,8 @@ const AuthPage = () => {
                 <Login handleClick={handleSignStateChange}/>
                 }
                 <div className='separator'>Ou</div>
-                <button className='googleLogin'>
-                    <img src={googleImg} />
+                <button className='googleLogin' onClick={handleGoogleButton}>
+                    <img src={googleImg} alt=''/>
                     <span>Login with Google</span>
                 </button>
             </div>

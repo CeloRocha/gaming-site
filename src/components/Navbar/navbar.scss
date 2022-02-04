@@ -32,4 +32,14 @@ header{
         }
     }
 
+    .user{
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        img{
+            border-radius: 50%;
+            height: 3.2rem;
+            width: 3.2rem;
+        }
+    }
 }

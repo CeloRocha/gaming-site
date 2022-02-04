@@ -2,20 +2,30 @@ import React from 'react';
 import { useState } from 'react';
 import Button from '../Button/Button';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router';
 
 const Login = (props) => {
 
-    const [ userName, setUserName ] = useState('');
+    const navigate = useNavigate();
+    const [ userEmail, setUserEmail ] = useState('');
     const [ userPassword, setUserPassword ] = useState('');
+    const { signInNormally } = useAuth()
+
+    async function handleSignIn(event){
+        event.preventDefault();
+        await signInNormally(userEmail, userPassword)
+        navigate('/')
+    }
 
     return(
         <>
-            <form className='form-login'>
+            <form className='form-login' onSubmit={handleSignIn}>
                 <input
                     type="text"
-                    placeholder='Nome de usuário'
-                    value={userName}
-                    onChange={(event) => setUserName(event.target.value)}
+                    placeholder='Digite seu email'
+                    value={userEmail}
+                    onChange={(event) => setUserEmail(event.target.value)}
                 />
                 <input
                     type="password"

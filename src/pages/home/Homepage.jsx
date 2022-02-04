@@ -4,6 +4,7 @@ import Navbar from '../../components/Navbar/Navbar';
 import Home from '../../components/Home/Home';
 
 const Homepage = () => {
+
   return(
     <div className='homepage'>
         <Navbar />

@@ -2,17 +2,27 @@ import React from 'react';
 import { useState } from 'react';
 import Button from '../Button/Button';
 import { Link } from 'react-router-dom';
-
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router';
 const SignIn = (props) => {
 
+    const navigate = useNavigate()
+    const { register } = useAuth();
     const [ email, setEmail ] = useState('');
     const [ userName, setUserName ] = useState('');
     const [ userPassword, setUserPassword ] = useState('');
     const [ confirmPassword, setConfirmPassword ] = useState('');
 
+    async function handleRegister(event){
+        event.preventDefault();
+        if( userPassword !== confirmPassword) return console.log('Senhas erradas')
+        await register(userName, email, userPassword)
+        navigate('/')
+    }
+
     return(
         <>
-            <form className='form-login'>
+            <form className='form-login' onSubmit={handleRegister}>
                 <input
                     type="email"
                     placeholder='Digite um email'
