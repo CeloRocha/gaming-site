@@ -1,7 +1,7 @@
 import firebase from 'firebase/compat/app';
 
 import 'firebase/compat/auth'
-// import { getDatabase } from "firebase/database";
+import { getDatabase } from "firebase/database";
 import { getAuth } from 'firebase/auth';
 
 const {initializeApp} = firebase;
@@ -12,7 +12,7 @@ const firebaseConfig = {
 
     authDomain: process.env.REACT_APP_AUTH_DOMAIN,
   
-    // databaseURL: process.env.REACT_APP_DATABASE_URL,
+    databaseURL: process.env.REACT_APP_DATABASE_URL,
   
     projectId: process.env.REACT_APP_PROJECT_ID,
   
@@ -30,4 +30,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-// export const db = getDatabase(app);
+export const db = getDatabase(app);

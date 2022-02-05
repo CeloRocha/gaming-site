@@ -3,12 +3,18 @@ import { useNavigate } from 'react-router';
 import './home.scss'
 import Button from '../Button/Button';
 import backgroundImg from '../../assets/images/controler.svg'
+import { useAuth } from '../../hooks/useAuth';
 const Home = () => {
 
   const navigate = useNavigate();
+  const { handleAuthorization } = useAuth();
 
-  function goToLobby () {
-    navigate('/lobby')
+
+
+  async function goToLobby () {
+    if(await handleAuthorization()){
+      navigate('/lobby')
+    }
   }
 
   return(

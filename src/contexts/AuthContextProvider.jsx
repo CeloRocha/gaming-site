@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext} from 'react'
-
+import { db } from '../services/firebase'
+import { ref, set, get, child} from "firebase/database";
 import { 
     signInWithPopup,
     GoogleAuthProvider,
@@ -17,7 +18,7 @@ export function AuthContextProvider(props){
 
     const [user, setUser] = useState()
     
-    function handleUser(user){
+    function handleUser(user, victory = 0){
         if(user){
             const { email, displayName, photoURL, uid, emailVerified} = user
 
@@ -30,7 +31,8 @@ export function AuthContextProvider(props){
             email: email,
             name: displayName,
             avatar: String(photoURL),
-            verified: emailVerified
+            verified: emailVerified,
+            victory: victory
         })
         }
     }
@@ -43,34 +45,62 @@ export function AuthContextProvider(props){
 
     async function signInNormally(email, password){
         await signInWithEmailAndPassword(auth, email, password)
-        handleUser(auth.currentUser)
+        const dbRef = ref(db)
+        const roomRef = await get(child(dbRef, `users/${auth.currentUser.uid}`))
+        if(!roomRef.exists()) {
+            alert("User doesn't exist")
+            return
+        }
+        handleUser(auth.currentUser, roomRef.val().victory)
     }
 
     async function signInWithGoogle () {
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider)
-        handleUser(result.user)
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            // const credential = GoogleAuthProvider.credentialFromResult(result);
-            // const token = credential.accessToken;
-            // The signed-in user info.
+        const dbRef = ref(db)
+        const roomRef = await get(child(dbRef, `users/${auth.currentUser.uid}`))
+        if(!roomRef.exists()) {
+            await set(ref(db, `/users/${auth.currentUser.uid}`), {
+                victory: 0, name: auth.currentUser.displayName, avatar: String(auth.currentUser.photoURL)
+            })
+            handleUser(result.user)
+            return
+        }
+        handleUser(result.user, roomRef.val().victory)
     }
 
     async function register(name, email, password) {
-        const result = await createUserWithEmailAndPassword(auth, email, password)
+        await createUserWithEmailAndPassword(auth, email, password)
         await updateProfile(auth.currentUser, {
             displayName: name, photoURL: standardUserImg
         })
         await sendEmailVerification(auth.currentUser)
         handleUser(auth.currentUser)
+        await set(ref(db, `/users/${auth.currentUser.uid}`), {
+            victory: 0, name: auth.currentUser.displayName, avatar: String(auth.currentUser.photoURL)
+        })
     }
 
     async function handleSignOut(){
-        const response = await signOut(auth)
+        await signOut(auth)
         setUser()
     }
+
+    async function handleAuthorization(){
+        if(user.verified){
+            return true
+        }
+        await auth.currentUser.reload()
+        if(auth.currentUser.emailVerified){
+            handleUser(auth.currentUser)
+            return true
+        }else{
+            return false
+        }
+    }
+     
     return(
-        <AuthContext.Provider value={{user, signInWithGoogle, handleSignOut, register, signInNormally}} >
+        <AuthContext.Provider value={{user, signInWithGoogle, handleSignOut, register, signInNormally, handleAuthorization}} >
             {props.children}
         </AuthContext.Provider>
     )

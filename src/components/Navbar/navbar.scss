@@ -33,6 +33,7 @@ header{
     }
 
     .user{
+        position: relative;
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -40,6 +41,24 @@ header{
             border-radius: 50%;
             height: 3.2rem;
             width: 3.2rem;
+            border: 1px solid white;
+        }
+        &.needVerify::after {
+            content: 'Verify your account';
+            position: absolute;
+            top: 100%;
+            width: 100%;
+            border-radius: 2rem;
+            text-align: center;
+            background: rgba($color: #FF0000, $alpha: 0.4);
+            font-size: 1.6rem;
+            padding: 1rem;
+            transition: 0.5s;
+            transform-origin: top;
+            transform: scaleY(0);
+        }
+        &.needVerify:hover::after{
+            transform: scaleY(1);
         }
     }
 }

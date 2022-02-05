@@ -27,10 +27,10 @@ const Navbar = () => {
         </nav>
         { user 
         ?
-        <div className='user'>
+        <div className={`user ${!user.verified ? 'needVerify' : ''}`}>
           <img src={user.avatar} alt="this" referrerPolicy='no-referrer' />
           <h1>{user.name}</h1>
-          {user.verified ? <h1>Verificado</h1> : <h1>Não</h1>}
+          <span>Vitórias: {user.victory}</span>
           <Button  onClick={handleSignOut}>Sign Out</Button>
         </div>
         :
