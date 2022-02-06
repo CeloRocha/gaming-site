@@ -1,0 +1,21 @@
+.title {
+    position: relative;
+    font-size: 4.8rem;
+    text-align: center;
+    font-family: 'Syne Tactile';
+    background-clip: text;
+    color: transparent;
+    overflow: hidden;
+    background-image: linear-gradient(90deg, red, red 33%, 45%, rgb(255, 155, 0), 55%, red 67%, red);
+    background-size: 325%;
+    animation: bg-animation 10s infinite linear;
+}
+
+@keyframes bg-animation {
+    0%{
+        background-position: left;
+    }
+    100%{
+        background-position: right;
+    }
+}

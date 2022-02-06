@@ -44,14 +44,29 @@ export function AuthContextProvider(props){
     }, [])
 
     async function signInNormally(email, password){
-        await signInWithEmailAndPassword(auth, email, password)
-        const dbRef = ref(db)
-        const roomRef = await get(child(dbRef, `users/${auth.currentUser.uid}`))
-        if(!roomRef.exists()) {
-            alert("User doesn't exist")
-            return
+        try {
+            const response = await signInWithEmailAndPassword(auth, email, password)
+            console.log(response)
+            const dbRef = ref(db)
+            const roomRef = await get(child(dbRef, `users/${auth.currentUser.uid}`))
+            if(!roomRef.exists()) {
+                alert("User doesn't exist")
+                return { complete: false, error: ''}
+            }
+            handleUser(auth.currentUser, roomRef.val().victory)
+            return { complete: true, error: ''}
+        
+        } catch (error) {
+            const errorRegex1 = /Firebase: Error \(auth\//;
+            const errorRegex2 = /\)\./;
+            const message = error.message
+                .replace(errorRegex1, '')
+                .replace(errorRegex2, '')
+                .replace(/-/, ' ')
+            return { complete: false, error: message.toUpperCase()}
         }
-        handleUser(auth.currentUser, roomRef.val().victory)
+    
+
     }
 
     async function signInWithGoogle () {
@@ -70,15 +85,26 @@ export function AuthContextProvider(props){
     }
 
     async function register(name, email, password) {
-        await createUserWithEmailAndPassword(auth, email, password)
-        await updateProfile(auth.currentUser, {
-            displayName: name, photoURL: standardUserImg
-        })
-        await sendEmailVerification(auth.currentUser)
-        handleUser(auth.currentUser)
-        await set(ref(db, `/users/${auth.currentUser.uid}`), {
-            victory: 0, name: auth.currentUser.displayName, avatar: String(auth.currentUser.photoURL)
-        })
+        try{
+            await createUserWithEmailAndPassword(auth, email, password)
+            await updateProfile(auth.currentUser, {
+                displayName: name, photoURL: standardUserImg
+            })
+            await sendEmailVerification(auth.currentUser)
+            handleUser(auth.currentUser)
+            await set(ref(db, `/users/${auth.currentUser.uid}`), {
+                victory: 0, name: auth.currentUser.displayName, avatar: String(auth.currentUser.photoURL)
+            })
+            return { complete: true, error: ''}
+        } catch (error) {
+            const errorRegex1 = /Firebase: Error \(auth\//;
+            const errorRegex2 = /\)\./;
+            const message = error.message
+                .replace(errorRegex1, '')
+                .replace(errorRegex2, '')
+                .replace(/-/, ' ')
+            return { complete: false, error: message.toUpperCase()}
+        }
     }
 
     async function handleSignOut(){

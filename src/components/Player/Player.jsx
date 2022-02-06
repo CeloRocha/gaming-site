@@ -7,10 +7,10 @@ const Player = (props) => {
 
     return(
         <div className='player'>
-            <img className='player-icon' src={googleImg} alt="Player Icon" />
+            <img className='player-icon' src={props.avatar} alt="Player Icon" />
             <h3>{props.name}</h3>
             <span>Vitórias: {props.wins}</span>
-            <img src={props.status ? readyImg : notReadyImg} alt='Ready' />
+            {/* <img src={props.status ? readyImg : notReadyImg} alt='Ready' /> */}
 
         </div>
     );

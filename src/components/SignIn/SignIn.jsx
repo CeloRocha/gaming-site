@@ -11,34 +11,43 @@ const SignIn = (props) => {
     const [ userName, setUserName ] = useState('');
     const [ userPassword, setUserPassword ] = useState('');
     const [ confirmPassword, setConfirmPassword ] = useState('');
-
+    const [ errorText, setErrorText ] = useState();
     async function handleRegister(event){
         event.preventDefault();
-        if( userPassword !== confirmPassword) return console.log('Senhas erradas')
-        await register(userName, email, userPassword)
-        navigate('/')
+        if( userPassword !== confirmPassword) return setErrorText('Senhas diferentes')
+        const { complete, error } = await register(userName, email, userPassword)
+        if(complete){
+            setErrorText()
+            navigate('/')
+        }else{
+            setErrorText(error)
+        }
     }
 
     return(
         <>
+            {errorText && <span className='error' >{errorText}</span>}
             <form className='form-login' onSubmit={handleRegister}>
                 <input
                     type="email"
                     placeholder='Digite um email'
                     value={email}
                     onChange={(event) => setEmail(event.target.value)}
+                    required
                 />
                 <input
                     type="text"
                     placeholder='Nome de usuário'
                     value={userName}
                     onChange={(event) => setUserName(event.target.value)}
+                    required
                 />
                 <input
                     type="password"
                     placeholder='Senha'
                     value={userPassword}
                     onChange={(event) => setUserPassword(event.target.value)}
+                    required
 
                 />
                 <input
@@ -46,7 +55,7 @@ const SignIn = (props) => {
                     placeholder='Confirme sua senha'
                     value={confirmPassword}
                     onChange={(event) => setConfirmPassword(event.target.value)}
-
+                    required
                 />
                 <Button type='submit'>Registrar-se</Button>
             </form>

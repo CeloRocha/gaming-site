@@ -9,16 +9,23 @@ const Login = (props) => {
     const navigate = useNavigate();
     const [ userEmail, setUserEmail ] = useState('');
     const [ userPassword, setUserPassword ] = useState('');
-    const { signInNormally } = useAuth()
+    const { signInNormally } = useAuth();
+    const [ errorText, setErrorText ] = useState();
 
     async function handleSignIn(event){
         event.preventDefault();
-        await signInNormally(userEmail, userPassword)
-        navigate('/')
+        const { complete, error } = await signInNormally(userEmail, userPassword);
+        if(complete){
+            setErrorText()
+            navigate('/')
+        }else{
+            setErrorText(error)
+        }
     }
 
     return(
         <>
+            {errorText && <span className='error'>{errorText}</span>}
             <form className='form-login' onSubmit={handleSignIn}>
                 <input
                     type="text"

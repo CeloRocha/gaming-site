@@ -1,0 +1,10 @@
+.leaderboard{
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    .leaders{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: 5rem;
+    }
+}

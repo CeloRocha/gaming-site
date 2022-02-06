@@ -4,6 +4,7 @@ import './home.scss'
 import Button from '../Button/Button';
 import backgroundImg from '../../assets/images/controler.svg'
 import { useAuth } from '../../hooks/useAuth';
+import Title from '../Title/Title';
 const Home = () => {
 
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Home = () => {
   return(
     <section className='home'>
             <main className='content'>
-                <h2>Jogue online com seus amigos!</h2>
+                <Title>Jogue online com seus amigos!</Title>
                 <Button onClick={goToLobby}>Jogue agora</Button>
             </main>
             <aside>
