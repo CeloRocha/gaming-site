@@ -14,14 +14,16 @@ const Home = () => {
 
   async function goToLobby () {
     if(await handleAuthorization()){
-      navigate('/lobby')
+      navigate('/search')
+    }else{
+      navigate('/login')
     }
   }
 
   return(
     <section className='home'>
             <main className='content'>
-                <Title>Jogue online com seus amigos!</Title>
+                <Title className='style'>Jogue online com seus amigos!</Title>
                 <Button onClick={goToLobby}>Jogue agora</Button>
             </main>
             <aside>

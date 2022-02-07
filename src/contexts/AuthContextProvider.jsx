@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext} from 'react'
-import { db } from '../services/firebase'
+import { db, auth} from '../services/firebase'
 import { ref, set, get, child} from "firebase/database";
 import { 
     signInWithPopup,
@@ -10,8 +10,8 @@ import {
     signInWithEmailAndPassword,
     sendEmailVerification
 } from "firebase/auth";
-import { auth } from '../services/firebase';
 import standardUserImg from '../assets/images/User.svg'
+import { upload, download } from '../helper/firebaseStorageFunctions';
 export const AuthContext = createContext({});
 
 export function AuthContextProvider(props){
@@ -45,8 +45,7 @@ export function AuthContextProvider(props){
 
     async function signInNormally(email, password){
         try {
-            const response = await signInWithEmailAndPassword(auth, email, password)
-            console.log(response)
+            await signInWithEmailAndPassword(auth, email, password)
             const dbRef = ref(db)
             const roomRef = await get(child(dbRef, `users/${auth.currentUser.uid}`))
             if(!roomRef.exists()) {
@@ -73,15 +72,15 @@ export function AuthContextProvider(props){
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider)
         const dbRef = ref(db)
-        const roomRef = await get(child(dbRef, `users/${auth.currentUser.uid}`))
-        if(!roomRef.exists()) {
+        const userRef = await get(child(dbRef, `users/${auth.currentUser.uid}`))
+        if(!userRef.exists()) {
             await set(ref(db, `/users/${auth.currentUser.uid}`), {
                 victory: 0, name: auth.currentUser.displayName, avatar: String(auth.currentUser.photoURL)
             })
             handleUser(result.user)
             return
         }
-        handleUser(result.user, roomRef.val().victory)
+        handleUser(result.user, userRef.val().victory)
     }
 
     async function register(name, email, password) {
@@ -113,6 +112,7 @@ export function AuthContextProvider(props){
     }
 
     async function handleAuthorization(){
+        if(!user){ return false}
         if(user.verified){
             return true
         }
@@ -124,9 +124,21 @@ export function AuthContextProvider(props){
             return false
         }
     }
-     
+    
+    async function uploadImg(file){
+        await upload(auth.currentUser.uid, file)
+        const imgUrl = await download(auth.currentUser.uid)
+        await set(ref(db, `/users/${auth.currentUser.uid}/avatar`), String(imgUrl))
+        await updateProfile(auth.currentUser, {
+            photoURL: imgUrl
+        })
+        setUser(prevUser =>{
+            return {...prevUser, avatar: imgUrl}
+        })
+    }
+
     return(
-        <AuthContext.Provider value={{user, signInWithGoogle, handleSignOut, register, signInNormally, handleAuthorization}} >
+        <AuthContext.Provider value={{user, signInWithGoogle, handleSignOut, register, signInNormally, handleAuthorization, uploadImg}} >
             {props.children}
         </AuthContext.Provider>
     )

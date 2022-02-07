@@ -1,0 +1,38 @@
+.searchLobby-page{
+    display: flex;
+    padding-top: 10rem;
+    flex-direction: column;
+    align-items: center;
+    width: 80vw;
+    margin: auto;
+    .searchLobby-div{
+        display: flex;
+        flex-direction: column;
+        background: #2f2f2f;
+        width: min(80%, 70rem);
+        min-height: 20rem;
+        border-radius: 3rem;
+        .searchLobby-top {
+            margin: 2rem;
+            align-self: center;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            gap: 3rem;
+
+            input {
+                // background: rgba(100, 100, 100, 0.8);
+                outline: none;
+                background: transparent;
+                border: 1px solid #AAA;
+                flex: 1;
+                padding: 0.5rem;
+                font-size: 1.6rem;
+            }
+            button{
+                cursor: pointer;
+                background: transparent;
+            }
+        }
+    }
+}

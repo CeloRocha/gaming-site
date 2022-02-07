@@ -1,0 +1,31 @@
+.footer {
+    justify-self: flex-end;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    height: 5rem;
+    width: 100%;
+    padding: 2rem 0;
+    a {
+        border-radius: 9999px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0 2rem;
+        img {
+            height: 2.5rem;
+            width: 2.5rem;
+            transition: 1s;
+        }
+        span{
+            color: white;
+            font-size: 1.6rem;
+        }
+
+        &:hover {
+            img {
+                transform: rotateZ(360deg);
+            }
+        }
+    }
+}

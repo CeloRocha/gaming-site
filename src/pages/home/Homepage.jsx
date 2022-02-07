@@ -3,6 +3,7 @@ import './homepage.scss'
 import Navbar from '../../components/Navbar/Navbar';
 import Home from '../../components/Home/Home';
 import Leaderboard from '../../components/Leaderboard/Leaderboard';
+import Footer from '../../components/Footer/Footer';
 
 const Homepage = () => {
 
@@ -11,6 +12,7 @@ const Homepage = () => {
         <Navbar />
         <Home />
         <Leaderboard />
+        <Footer />
     </div>
     )
 };
