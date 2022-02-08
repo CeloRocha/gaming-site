@@ -14,7 +14,7 @@ const App = () => {
         <Routes>
           <Route path='/' exact element={<Homepage />} />
           <Route path='/login' exact element={<AuthPage />} />
-          <Route path='/lobby/:id' element={<Lobbypage />} />
+          <Route path='/lobby/:room' element={<Lobbypage />} />
           <Route path='/search' element={<SearchLobbyPage />} />
         </Routes>
       </AuthContextProvider>

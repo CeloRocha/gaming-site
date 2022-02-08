@@ -1,10 +1,25 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { db } from '../../services/firebase';
+import { set, ref } from '@firebase/database';
+import { useNavigate } from 'react-router-dom';
 import './LobbyItem.scss'
+import { useAuth } from '../../hooks/useAuth';
 
 const LobbyItem = (props) => {
 
-    
+    const navigate = useNavigate()
+    const { user } = useAuth();
+
+    async function handleEnterRoom(){
+        await set(ref(db, `/rooms/${props.id}/players/${user.id}`), {
+            avatar: user.avatar,
+            name: user.name,
+            id: user.id,
+            victory: user.victory,
+            status: false
+        })
+        navigate(`/lobby/${props.id}`)
+    }
 
     return(
         <div className='lobbyItem'>
@@ -12,7 +27,7 @@ const LobbyItem = (props) => {
             <h3>{props.game}</h3>
             <h3>Criador: {props.admin}</h3>
             <h3>{props.players}/6</h3>
-            <Link to={`/lobby/${props.id}`}>Entrar na sala</Link>
+            <button onClick={handleEnterRoom}>Entrar na sala</button>
         </div>
     )
 };

@@ -5,10 +5,39 @@
     align-items: center;
     width: 80vw;
     margin: auto;
+
+    form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        background: rgba($color: #2f2f2f, $alpha: 0.7);
+        width: min(80%, 40rem);
+        min-height: 20rem;
+        border-radius: 3rem;
+
+        div {
+            margin: 0 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        label {
+            font-size: 1.6rem;
+        }
+        input {
+            // background: rgba(100, 100, 100, 0.8);
+            outline: none;
+            background: transparent;
+            border: 1px solid #AAA;
+            padding: 0.5rem;
+            font-size: 1.6rem;
+        }
+    }
     .searchLobby-div{
         display: flex;
         flex-direction: column;
-        background: #2f2f2f;
+        background: rgba($color: #2f2f2f, $alpha: 0.7);
         width: min(80%, 70rem);
         min-height: 20rem;
         border-radius: 3rem;
