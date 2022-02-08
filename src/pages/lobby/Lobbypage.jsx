@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { onValue, ref, push, remove, update } from '@firebase/database';
 import { db } from '../../services/firebase';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -8,6 +7,7 @@ import Player from '../../components/Player/Player';
 import Button from '../../components/Button/Button';
 import gameImg from '../../assets/images/controlerLogo.svg';
 import swithGameImg from '../../assets/images/Apps.svg';
+import backgroundMessagesImg from '../../assets/images/controler.svg'
 import { useAuth } from '../../hooks/useAuth';
 import Message from '../../components/Message/Message';
 const Lobbypage = () => {
@@ -20,6 +20,7 @@ const Lobbypage = () => {
     const [ game, setGame ] = useState('')
     const [ status, setStatus ] = useState(false)
     
+    const dummy = useRef()
     const [ sendMessage, setSendMessage ] = useState('')
 
     useEffect(() => {
@@ -57,62 +58,8 @@ const Lobbypage = () => {
             content: sendMessage
         })
         setSendMessage('')
+        dummy.current.scrollIntoView({ behavior: 'smooth'});
     }
-    // async function handleEndRoom () {
-    //     await update(ref(db, `/rooms/${roomId}`), ({ endedAt: new Date()}))
-    //     navigate('/')
-
-    // }
-
-    // async function handleDeleteQuestion(questionId) {
-    //     if(window.confirm('Tem certeza que deseja excluir essa pergunta?')){
-    //         await remove(ref(db, `/rooms/${roomId}/questions/${questionId}`))
-    //     }
-    // }
-
-    // useEffect(()=>{
-    //     const questionsRef = ref(db, `rooms/${roomId}`);
-    //     const unmount = onValue(questionsRef, (res)=>{
-    //         const database = res.val()
-    //         setTitle(database.title)
-    //         if(database?.questions){
-    //             const data = Object.entries(database.questions)
-    //             const parsedQuestions = data.map(([key, info]) => ({
-    //                 key: key,
-    //                 content: info.content,
-    //                 author: info.author.name,
-    //                 avatar: info.author.avatar,
-    //                 isAnswered: info.isAnswered,
-    //                 isHighlighted: info.isHighlighted,
-    //                 likeCount: Object.values(info.likes ?? {}).length,
-    //                 likeId: Object.entries(info.likes ?? {}).find(([key, like]) => like.authorId === user?.id)?.[0]
-    //             }))
-    //             parsedQuestions.sort((questionA, questionB) => {
-    //                 if(questionA.isAnswered && !questionB.isAnswered){
-    //                     return 1;
-    //                 }else if(questionA.isAnswered && questionB.isAnswered){
-    //                     return 0;
-    //                 }else if(!questionA.isAnswered && questionB.isAnswered){
-    //                     return -1;
-    //                 }else if(questionA.isHighlighted){
-    //                     return -1;
-    //                 }else if(questionB.isHighlighted){
-    //                     return 1;
-    //                 }else{
-    //                     return (questionB.likeCount - questionA.likeCount)
-    //                 }
-    //             })
-    //             setQuestions(parsedQuestions)
-    //         }
-    //     })
-    //     return(()=>{unmount()})
-    //     // const db = getDatabase();
-    //     // const starCountRef = ref(db, 'posts/' + postId + '/starCount');
-    //     // onValue(starCountRef, (snapshot) => {
-    //     //   const data = snapshot.val();
-    //     //   updateStarCount(postElement, data);
-    //     // });
-    // }, [roomId, user?.id])
 
     return(
         <div className='lobby-page'>
@@ -151,6 +98,7 @@ const Lobbypage = () => {
                 </div>
             </div>
             <div className='lobby-chat'>
+                <img src={backgroundMessagesImg} alt="" className='backgroundMessagesImg'/>
                 <div className='lobby-messages'>
                     {messages?.map((message, index) => {
                         return(
@@ -162,6 +110,7 @@ const Lobbypage = () => {
                             />
                         )
                     })}
+                    <div ref={dummy}></div>
                 </div>
                 <form onSubmit={handleSendMessage}  className='send-message'>
                     <input
@@ -170,6 +119,7 @@ const Lobbypage = () => {
                         onChange={ev => setSendMessage(ev.target.value)}
                         value={sendMessage}
                     />
+                    
                     <button>
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M21.2428 12.4371C21.4016 12.3489 21.5 12.1816 21.5 12C21.5 11.8184 21.4016 11.6511 21.2428 11.5629L18.9605 10.295C14.464 7.79689 9.72391 5.76488 4.81421 4.2306L4.14914 4.02276C3.99732 3.97532 3.83198 4.00294 3.70383 4.09716C3.57568 4.19138 3.5 4.34094 3.5 4.5V10.25C3.5 10.5159 3.70816 10.7353 3.97372 10.7493L4.98336 10.8025C7.44497 10.932 9.89156 11.2659 12.2979 11.8006L12.5362 11.8536C12.5892 11.8654 12.6122 11.887 12.625 11.9042C12.6411 11.926 12.6536 11.9594 12.6536 12C12.6536 12.0406 12.6411 12.0741 12.625 12.0958C12.6122 12.113 12.5892 12.1347 12.5362 12.1464L12.2979 12.1994C9.89157 12.7341 7.44496 13.068 4.98334 13.1976L3.97372 13.2507C3.70816 13.2647 3.5 13.4841 3.5 13.75V19.5C3.5 19.6591 3.57568 19.8086 3.70383 19.9029C3.83198 19.9971 3.99732 20.0247 4.14914 19.9772L4.81422 19.7694C9.72391 18.2351 14.464 16.2031 18.9605 13.705L21.2428 12.4371Z"/>
