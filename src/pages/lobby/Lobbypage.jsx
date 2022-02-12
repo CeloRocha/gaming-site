@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { onValue, ref, push, remove, update } from '@firebase/database';
+import { onValue, ref, set, push, remove, update } from '@firebase/database';
 import { db } from '../../services/firebase';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './lobbypage.scss'
 import Player from '../../components/Player/Player';
 import Button from '../../components/Button/Button';
@@ -10,16 +10,20 @@ import swithGameImg from '../../assets/images/Apps.svg';
 import backgroundMessagesImg from '../../assets/images/controler.svg'
 import { useAuth } from '../../hooks/useAuth';
 import Message from '../../components/Message/Message';
+import Loading from '../../components/Loading/Loading';
+
 const Lobbypage = () => {
 
     const navigate = useNavigate()
     const { room } = useParams();
     const { user } = useAuth();
-    const [ players, setPlayers ] = useState()
-    const [ messages, setMessages ] = useState()
+    const [ players, setPlayers ] = useState();
+    const [ messages, setMessages ] = useState();
+    const [ admin, setAdmin ] = useState();
     const [ game, setGame ] = useState('')
     const [ status, setStatus ] = useState(false)
-    
+    const [ start, setStart ] = useState(false)
+
     const dummy = useRef()
     const [ sendMessage, setSendMessage ] = useState('')
 
@@ -28,7 +32,11 @@ const Lobbypage = () => {
         const unmount = onValue(roomRef, (res) => {
             const roomData = res.val();
             setGame(roomData.game)
+            setAdmin(roomData.admin)
             setPlayers(Object.entries(roomData.players))
+            if(roomData?.inGame){
+                setStart(roomData.inGame)
+            }
             if(roomData?.messages){
                 setMessages(Object.entries(roomData.messages))
             }
@@ -61,8 +69,64 @@ const Lobbypage = () => {
         dummy.current.scrollIntoView({ behavior: 'smooth'});
     }
 
+    function isAdmin(){
+        return admin === user.id ? true : false
+    }
+    
+    function everyoneIsReady(){
+        return players?.every(player => {
+            return player[1].status
+        })
+    }
+
+    async function initializeGame(){
+        let cards = []
+        for (let i = 3; i<=35; i++){
+            cards.push(i);
+        }
+        while(cards.length > 24){
+            cards.splice(Math.floor(Math.random()*cards.length), 1)
+        }
+        cards = cards
+            .map(value => ({value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(({value}) => value)
+        const cardOnTable = cards.pop()
+
+        await set(ref(db, `/games/${room}`), {
+            admin: admin,
+            cards: cards,
+            players: Object.fromEntries(players.map(player =>{
+                return [player[0], { avatar: player[1].avatar, name: player[1].name, coins: 11, cards: [] }]
+                })),
+            cardOnTable: {card: cardOnTable, coins: 0},
+            currentPlayer: admin
+        })
+        await set(ref(db, `/rooms/${room}/inGame`), true )
+    }
+
+    async function startGame(){
+        await initializeGame();
+        navigate(`/thanks/${room}`)
+    }
+
+    if(isAdmin){
+        if(everyoneIsReady()){
+            startGame()
+        }
+    }else{
+        if(start){
+            navigate(`/thanks/${room}`)
+        }
+    }
+
     return(
         <div className='lobby-page'>
+            { !players
+            ?
+                <Loading />
+            :   
+            <> 
             <div className='lobby-left'>
                 <div className='lobby-left-upper'>
                     <button onClick={handleQuitRoom} className='lobby-quitLink'>
@@ -74,7 +138,7 @@ const Lobbypage = () => {
                     </button>
                     <div className='jogo'>
                         <img src={gameImg} alt="Jogo:" />
-                        <h1>Não, por favor!</h1>
+                        <h1>{game}</h1>
                     </div>
                 </div>
                 <div className='players'>
@@ -90,10 +154,18 @@ const Lobbypage = () => {
                     })}
                 </div>
                 <div className='buttons'>
+                    {isAdmin()
+                    ?
                     <Button className='options'>
                         <img src={swithGameImg} alt="" />
                         <span>Trocar Jogo</span>
                     </Button>
+                    :
+                    <Button className='options'>
+                        <img src={swithGameImg} alt="" />
+                        <span>Ver regras</span>
+                    </Button>
+                    }
                     <Button onClick={handleState} className='ready ready-button'>Pronto</Button>
                 </div>
             </div>
@@ -127,6 +199,8 @@ const Lobbypage = () => {
                     </button>
                 </form>
             </div>
+            </>
+        }
         </div>
   )
 };

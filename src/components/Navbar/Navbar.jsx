@@ -10,7 +10,7 @@ const Navbar = () => {
   const { user, handleSignOut } = useAuth();
 
   function handleClick(){
-    navigate('login')
+    navigate('/login')
   }
   return(
     <header className='header'>

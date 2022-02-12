@@ -1,0 +1,53 @@
+.loading-animation {
+    display: flex;
+    justify-self: center;
+    align-self: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 5rem;
+    & > .loading-title{
+        font-size: 10rem;
+    }
+    flex: 10;
+    justify-content: center;
+    align-content: center;
+
+    .loading-dots {
+        position: relative;
+        display: flex;
+        gap: 4rem;
+
+        .loading-dot {
+            background: red;
+            border-radius: 50%;
+            height: 7rem;
+            width: 7rem;
+            animation: loading 2s infinite;
+            animation-timing-function: ease-in-out;
+            background-image: linear-gradient(45deg, red, red 40%, rgb(255, 155, 0));
+        }
+
+        :nth-child(2){
+            animation-delay: 0.25s;
+        }
+        :nth-child(3){
+            animation-delay: 0.5s;
+        }
+    }
+}
+
+@keyframes loading {
+    0%{
+        transform: translateY(0);
+    }
+    25%{
+        transform: translateY(-50%);
+    }
+    50%{
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+    
+}

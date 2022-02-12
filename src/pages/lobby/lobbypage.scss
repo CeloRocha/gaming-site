@@ -3,8 +3,7 @@
     left: 50%;
     transform: translateX(-50%);
     position: absolute;
-    display: grid;
-    grid-template-columns: 4fr 6fr;
+    display: flex;
     margin: 2rem auto;
 
     min-height: 90vh;
