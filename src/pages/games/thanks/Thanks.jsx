@@ -1,5 +1,6 @@
 import React, { useState, useEffect} from 'react';
 import './Thanks.scss'
+import './ThanksFinish.scss'
 import { useNavigate, useParams } from 'react-router';
 import { useAuth } from '../../../hooks/useAuth';
 import { onValue, ref, get, child, remove, update } from '@firebase/database';
@@ -8,13 +9,28 @@ import { useGame } from '../../../hooks/useGame';
 import Button from '../../../components/Button/Button'
 import Title from '../../../components/Title/Title';
 import Loading from '../../../components/Loading/Loading';
+import Card from '../../../components/Card/Card';
+import Cards from '../../../components/Cards/Cards';
+import coinImg from '../../../assets/images/coinImg.svg'
+import PlayerInGame from '../../../components/PlayerInGame/PlayerInGame';
+
 const Thanks = () => {
 
     const navigate = useNavigate()
     const { room } = useParams();
-    const { user } = useAuth();
+    const { user, addVictory } = useAuth();
     const [ admin, setAdmin ] = useState();
     const { players, currentPlayer, cards, cardOnTable, finish, nextCard, putCoin, pickCard} = useGame();
+
+    useEffect(()=>{
+        if(finish && isAdmin()){
+            handleFinish()
+        }
+        if(finish && isWinner()){
+            addVictory(room)
+        }
+    }, [finish])
+
 
     async function getInfo(){
         const roomRef = ref(db, `/games`);
@@ -50,6 +66,15 @@ const Thanks = () => {
         return admin === user.id ? true : false
     }
 
+    function isWinner(){
+        const finalPlayers = players.sort((playerA, playerB) => {
+            return playerA[1].points - playerB[1].points
+        })
+        if(finalPlayers[0][0] === user.id){
+            return true
+        }
+        return false
+    }
 
     async function quitGame(){
         if(isAdmin()){
@@ -67,53 +92,85 @@ const Thanks = () => {
         await update(ref(db, `/rooms/${room}`), updates)
     }
 
-    if(finish && isAdmin()){
-        handleFinish()
-        console.log('passing')
-    }else{
-        console.log('not')
-    }
 
     const showCurrentPlayer = players?.find( player => {
         return player[0] === currentPlayer
     })
 
+    const userPlayer = players?.find( (player, index) => {
+        return player[0] === user.id
+    })
+    const userIndex = players?.findIndex( (player, index) => {
+        return player[0] === user.id
+    })
+
+    const coins = []
+    for(let i=1; i<=cardOnTable.coins; i++){
+        coins.push(<img key={i} src={coinImg} alt={i}/>)
+    }
 
     return(
         <div className='thanks-game-page'>
             {finish
             ?
-            <>
-            {players.sort((playerA, playerB) => {
-                return playerA[1].points - playerB[1].points
-            })
-            .map((player, index) => {
-                return(
-                    <div>
-                        {index === 0 && <Title>Winner:</Title>}
-                        <h1>{player[1].name}, with {player[1].points}</h1>
-                    </div>
-                )
-            })}
-            <Button onClick={quitGame}>Go back to lobby</Button>
-            </>
+            <div className='finish'>
+                <div className='finish-positions'>
+                {players.sort((playerA, playerB) => {
+                    return playerA[1].points - playerB[1].points
+                })
+                .map((player, index) => {
+                    return(
+                        <div className={`finish-player p${index}`}>
+                            {index === 0 && <Title>Winner:</Title>}
+                            <img src={player[1].avatar} alt={player[1].name} />
+                            <h1>{player[1].name}</h1>
+                            <span>Pontos: {player[1].points}.</span>
+                        </div>
+                    )
+                })}
+                </div>
+                <Button onClick={quitGame}>Go back to lobby</Button>
+            </div>
             :
                 !players 
                 ?
                     <Loading />
                 :
                     <>
-                    <h1>Card: {cardOnTable.card}</h1>
-                    <h1>Coins: {cardOnTable.coins}</h1>
-                    {showCurrentPlayer && <Title>{showCurrentPlayer[1].name}</Title> }
-                    <Button onClick={handleNextCard}>Next Cards</Button>
-                    <Button onClick={handlePutCoin} >Put Coin</Button>
-                    <Button onClick={handlePickCard} >Pick Card</Button>
-                    {players.map(player => {
+                    <div className='current-card'>
+                        <Card number={cardOnTable.card}/>
+                        <div className="coins">{coins}</div>
+                    </div>
+                    {players
+                    .map( (player, index, players) => {
+                        let position = -1;
+                        if(index >= userIndex){
+                            position = index - userIndex
+                        }else{
+                            position = players.length + index - userIndex
+                        }
                         return(
-                            <h1>{player[1].name}: {player[1].coins} coins</h1>
-                            )
-                        })}
+                            <PlayerInGame
+                                avatar={player[1].avatar}
+                                name={player[1].name}
+                                cards={player[1].cards}
+                                current={player[0]===currentPlayer}
+                                position={position}
+                                coins={player[1].coins}
+                            />
+                        )
+                    })}
+                    
+                        <div className="options">
+                            {isYourTurn() &&
+                            <>
+                            {userPlayer[1].coins>0 &&
+                            <Button onClick={handlePutCoin} >Put Coin</Button>
+                            }
+                            <Button onClick={handlePickCard} >Pick Card</Button>
+                            </>
+                            }   
+                        </div>
                     </>
                 
             }

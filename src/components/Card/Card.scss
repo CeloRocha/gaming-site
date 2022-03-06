@@ -1,0 +1,79 @@
+.card{
+    --positioning: 0.2rem;
+    position: relative;
+    height: 20rem;
+    width: 12rem;
+    background: yellow;
+    font-size: 3rem;
+    font-weight: 700;
+    text-shadow: 0.1rem 0.1rem black;
+    border: 1rem solid black;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .middle{
+        span{
+            font-size: 6rem;
+            text-shadow: 0.2rem 0.2rem black;
+        }
+    }
+
+    .top-left{
+        position: absolute;
+        top: var(--positioning);
+        left: var(--positioning);
+    }
+    .top-right{
+        position: absolute;
+        top: var(--positioning);
+        right: var(--positioning);
+    }
+    .bottom-left{
+        position: absolute;
+        bottom: var(--positioning);
+        left: var(--positioning);
+        transform: rotateZ(180deg);
+    }
+    .bottom-right{
+        position: absolute;
+        bottom: var(--positioning);
+        right: var(--positioning);
+        transform: rotateZ(180deg);
+    }
+
+    &.small{
+        height: 9rem;
+        width: 5rem;
+        font-size: 1.2rem;
+        border: 0.6rem solid black;
+        .middle{
+            span{
+                font-size: 3.6rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-height: 700px) {
+    .card{
+
+        &.small{
+            height: 4rem;
+            width: 3.6rem;
+
+            .top-left, .top-right, .bottom-left, .bottom-right{
+                display: none;
+            }
+            .middle{
+                span{
+                    font-size: 2rem;
+                }
+            }
+        }
+            
+        
+    }
+
+}

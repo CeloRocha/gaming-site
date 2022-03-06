@@ -10,7 +10,9 @@ const Player = (props) => {
             <img className='player-icon' src={props.avatar} alt="Player Icon" referrerPolicy='no-referrer'/>
             <h3>{props.name}</h3>
             <span>Vitórias: {props.wins}</span>
+            {props.status !== undefined && 
             <img src={props?.status ? readyImg : notReadyImg} alt='Ready' />
+            }
 
         </div>
     );

@@ -9,8 +9,10 @@ import './SearchLobbyPage.scss'
 import Button from '../../components/Button/Button';
 import { useAuth } from '../../hooks/useAuth';
 import LobbyItem from '../../components/LobbyItem/LobbyItem';
+import {  useNavigate } from 'react-router';
 const SearchLobbyPage = () => {
 
+    const navigate = useNavigate()
     const { user } = useAuth()
     const [ newGameName, setNewGameName ] = useState('')
     const [ newGamePassword, setNewGamePassword ] = useState('')
@@ -28,10 +30,9 @@ const SearchLobbyPage = () => {
         getLobbys();
     }, [])
 
-
     async function handleCreateRoom(event){
         event.preventDefault()
-        const response = await push(ref(db, `/rooms`), {
+        const { key } = await push(ref(db, `/rooms`), {
             name: newGameName,
             admin: user.id,
             password: newGamePassword,
@@ -45,6 +46,7 @@ const SearchLobbyPage = () => {
             }},
             game: 'Thanks'
         })
+        navigate(`/lobby/${key}`)
     }
 
     const filteredGames = gamesData?.filter( game => {
@@ -59,7 +61,7 @@ const SearchLobbyPage = () => {
                 name={game[1].name}
                 admin={game[1].adminName}
                 game={game[1].game}
-                players={game[1]?.players?.length}
+                players={game[1]?.players ? Object.entries(game[1]?.players).length : 0}
                 password={game[1].password}
             />
         )
@@ -92,23 +94,32 @@ const SearchLobbyPage = () => {
                 </div>
                 <Button className='ready' type='submit'>Crie uma sala</Button>
             </form>
+            <span className='separator'>OU</span>
             <Title className='ready'>Encontre uma sala:</Title>
-            <div className='searchLobby-div'>
-                <div className='searchLobby-top'>
-                    <input
-                        type="text"
-                        onChange={event => setSearch(event.target.value)}
-                        value={search}
-                        placeholder='Digite o nome da sala.'
-                    />
-                    <button onClick={getLobbys}>
-                        <img src={refreshImg} alt='Refresh' />
-                    </button>
+            
+                <div className='searchLobby-div'>
+                    <div className='searchLobby-top'>
+                        <input
+                            type="text"
+                            onChange={event => setSearch(event.target.value)}
+                            value={search}
+                            placeholder='Digite o nome da sala.'
+                        />
+                        <button onClick={getLobbys}>
+                            <img src={refreshImg} alt='Refresh' />
+                        </button>
+                    </div>
+                    {games
+                    ?
+                        <section className='searchLobby-games'>
+                            {games}
+                        </section>
+                    :
+                        <div className='searchLobby-noRooms'>
+                            <span>Ainda não há nenhuma sala.</span>
+                        </div>
+                    }
                 </div>
-                <section className='searchLobby-games'>
-                    {games}
-                </section>
-            </div>
         </div>
     )
 };

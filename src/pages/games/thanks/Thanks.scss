@@ -1,0 +1,59 @@
+.thanks-game-page{
+    position: absolute;
+    top: 1%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    align-items: flex-start;
+    justify-items: stretch;
+    grid-template-columns: repeat(3, 30vw);
+    grid-template-rows: repeat(3, max(30vh, 18rem));
+    grid-template-areas:
+        'player0 card player1'
+        'player5 card player2'
+        'player4 buttons player3';
+    gap: 2rem;
+    .current-card{
+        padding: 4rem;
+        border-radius: 3rem;
+        box-shadow: 0 0 1rem 0.2rem #888;
+        align-self: center;
+        justify-self: center;
+        grid-area: card;
+        align-items: center;
+        // position: absolute;
+        // top: 5%;
+        // left: 50%;
+        // transform: translateX(-50%);
+
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        
+        .coins{
+            display: grid;
+            grid-template-columns: repeat(3, 3rem);
+        }
+    }
+
+    .options {
+        grid-area: buttons;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3rem;
+        justify-content: space-around;
+    }
+}
+
+@media screen and (max-height: 700px) {
+    
+    .thanks-game-page{
+        .current-player{
+            .player-background{
+                padding: 1rem 1rem 4rem;
+            }
+        }
+    }
+
+}

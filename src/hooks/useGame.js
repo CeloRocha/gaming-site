@@ -27,13 +27,8 @@ export function useGame(){
     const [ players, setPlayers ] = useState()
     const [ currentPlayer, setCurrentPlayer ] = useState('')
     const [ finish, setFinish ] = useState(false)
-    // async function getInfo(){
-    //     const roomRef = ref(db, `/games`);
-    //     const admin = await get(child(roomRef, `/${room}`))
-    // }
 
     useEffect(() => {
-        // getInfo()
         const roomRef = ref(db, `/games/${room}`);
         const unmount = onValue(roomRef, (res) => {
             if(!finish){
@@ -93,8 +88,6 @@ export function useGame(){
         updates[`/players/${playerId}/coins`] = newCoins
         updates['/currentPlayer'] = await nextPlayer()
         await update(ref(db, `/games/${room}`), updates)
-        // await set(ref(db, `/games/${room}/players/${playerId}/coins`), newCoins)
-        // await set(ref(db, `/games/${room}/cardOnTable`), {card: cardOnTable.card, coins: cardOnTable.coins+1})
         return cardOnTable
     }
 
@@ -120,8 +113,6 @@ export function useGame(){
         await update(ref(db, `/games/${room}`), updates)
         if(continueGame()){
             await nextCard()
-        }else{
-            console.log('here')
         }
         return
     }
@@ -167,10 +158,6 @@ export function useGame(){
                 cardsMatrix.push(cardsLine)
                 cardsLine = []
             }
-            // else if(cards[i] !== cards[i+1]-1){
-            //     cardsMatrix.push(cardsLine)
-            //     line = []
-            // }
         }
         return cardsMatrix
     }
@@ -193,6 +180,7 @@ export function useGame(){
         finish,
         nextCard,
         putCoin,
-        pickCard
+        pickCard,
+        joinCards
     }
 }

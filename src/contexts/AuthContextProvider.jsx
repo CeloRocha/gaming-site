@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext} from 'react'
 import { db, auth} from '../services/firebase'
-import { ref, set, get, child} from "firebase/database";
+import { ref, set, update, get, child} from "firebase/database";
 import { 
     signInWithPopup,
     GoogleAuthProvider,
@@ -137,8 +137,20 @@ export function AuthContextProvider(props){
         })
     }
 
+    async function addVictory(room){
+        const newVictory = user.victory + 1
+        await set(ref(db, `/users/${auth.currentUser.uid}`), {
+            victory: newVictory, name: auth.currentUser.displayName, avatar: String(auth.currentUser.photoURL)
+        })
+        setUser(prevUser => ({...prevUser, victory: newVictory
+        }))
+        const updates = {}
+        updates['/victory'] = newVictory
+        await update(ref(db, `/rooms/${room}/players/${user.id}`), updates)
+    }
+
     return(
-        <AuthContext.Provider value={{user, signInWithGoogle, handleSignOut, register, signInNormally, handleAuthorization, uploadImg}} >
+        <AuthContext.Provider value={{user, signInWithGoogle, handleSignOut, register, signInNormally, handleAuthorization, uploadImg, addVictory}} >
             {props.children}
         </AuthContext.Provider>
     )
