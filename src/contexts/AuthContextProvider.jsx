@@ -37,11 +37,23 @@ export function AuthContextProvider(props){
         }
     }
 
+    async function getVictory(){
+        if(auth.currentUser.uid !== undefined){
+            const dbRef = ref(db)
+            const roomRef = await get(child(dbRef, `users/${auth.currentUser.uid}`))
+            handleUser(auth.currentUser, roomRef.val()?.victory)
+        }
+    }
+
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => handleUser(user))
 
         return ()=>{unsubscribe()}
     }, [])
+
+    useEffect(()=>{
+        getVictory()
+    }, [user?.id])
 
     async function signInNormally(email, password){
         try {

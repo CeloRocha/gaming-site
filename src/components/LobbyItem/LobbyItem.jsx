@@ -6,12 +6,14 @@ import './LobbyItem.scss'
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../Button/Button';
 
+import lockImg from '../../assets/images/Lock.svg'
 const LobbyItem = (props) => {
 
     const navigate = useNavigate()
     const { user } = useAuth();
     console.log(props.players)
-    async function handleEnterRoom(){
+
+    async function enterRoom(){
         await set(ref(db, `/rooms/${props.id}/players/${user.id}`), {
             avatar: user.avatar,
             name: user.name,
@@ -21,6 +23,14 @@ const LobbyItem = (props) => {
         })
         navigate(`/lobby/${props.id}`)
     }
+    async function handleEnterRoom(){
+        if(props.password != ''){
+
+        }else{
+            enterRoom()
+        }
+        
+    }
 
     return(
         <div className='lobbyItem'>
@@ -29,7 +39,12 @@ const LobbyItem = (props) => {
             <h3>Criador: {props.admin}</h3>
             <h3 className='small'>{props.players}/6</h3>
             <div className='limiter'>
-                <Button className='options' onClick={handleEnterRoom}>Entrar na sala</Button>
+                <Button className='options' onClick={handleEnterRoom}>
+                    Entrar na sala
+                    {props.password != '' &&
+                    <img className='lock' src={lockImg} alt="Senha" />
+                    }
+                </Button>
             </div>
         </div>
     )
