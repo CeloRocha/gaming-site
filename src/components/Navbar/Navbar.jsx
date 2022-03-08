@@ -1,9 +1,10 @@
-import React from 'react';
 import './navbar.scss'
 import logoImg from '../../assets/images/controlerLogo.svg'
 import { useNavigate, Link } from 'react-router-dom';
 import Button from '../Button/Button';
 import { useAuth } from '../../hooks/useAuth';
+
+
 const Navbar = () => {
   const { uploadImg } = useAuth();
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Navbar = () => {
   function handleClick(){
     navigate('/login')
   }
+
   return(
     <header className='header'>
         <div className='logo'>
@@ -22,8 +24,6 @@ const Navbar = () => {
             <Link to='/'>Home</Link>
             <Link to='/search'>Salas</Link>
             <Link to='/rules'>Regras</Link>
-            <a href='#'>Me</a>
-
         </nav>
         { user 
         ?

@@ -32,6 +32,9 @@ const SearchLobbyPage = () => {
 
     async function handleCreateRoom(event){
         event.preventDefault()
+        if(!user){
+            navigate('/login')
+        }
         const { key } = await push(ref(db, `/rooms`), {
             name: newGameName,
             admin: user.id,

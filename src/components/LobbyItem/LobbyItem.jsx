@@ -1,17 +1,40 @@
-import React from 'react';
+import { useState } from 'react';
 import { db } from '../../services/firebase';
 import { set, ref } from '@firebase/database';
 import { useNavigate } from 'react-router-dom';
 import './LobbyItem.scss'
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../Button/Button';
-
+import Modal from 'react-modal';
 import lockImg from '../../assets/images/Lock.svg'
+import closeImg from '../../assets/images/Cross.svg'
+
+Modal.setAppElement('#root')
+
 const LobbyItem = (props) => {
 
     const navigate = useNavigate()
     const { user } = useAuth();
-    console.log(props.players)
+    const [ modalIsOpen, setModalIsOpen ] = useState(false);
+    const [ inputPassword, setInputPassword ] = useState('');
+    const [ showPasswordSpan, setShowPasswordSpan ] = useState(false);
+
+    function handleClick(){
+        navigate('/login')
+    }
+
+    function openModal(){
+        setModalIsOpen(true)
+    }
+
+    function closeModal(){
+        setModalIsOpen(false)
+    }
+
+    function afterOpenModal() {
+        setShowPasswordSpan(false)
+    }
+
 
     async function enterRoom(){
         await set(ref(db, `/rooms/${props.id}/players/${user.id}`), {
@@ -23,13 +46,26 @@ const LobbyItem = (props) => {
         })
         navigate(`/lobby/${props.id}`)
     }
-    async function handleEnterRoom(){
-        if(props.password != ''){
 
+    async function handleEnterRoom(){
+        if(!user){
+            navigate('/login')
         }else{
-            enterRoom()
+            if(props.password != ''){
+                openModal()
+            }else{
+                enterRoom()
+            }
         }
-        
+    }
+
+    function testPassword(event){
+        event.preventDefault()
+        if(inputPassword === props.password){
+            enterRoom()
+        }else{
+            setShowPasswordSpan(true)
+        }
     }
 
     return(
@@ -46,6 +82,28 @@ const LobbyItem = (props) => {
                     }
                 </Button>
             </div>
+            <Modal
+                isOpen={modalIsOpen}
+                onAfterOpen={afterOpenModal}
+                onRequestClose={closeModal}
+                contentLabel="Example Modal"
+                className="Modal"
+                overlayClassName="Overlay"
+            >
+                <button className='closeModal' onClick={closeModal}>
+                    <img src={closeImg} alt="Fechar" />
+                </button>
+                <h3>Sala: {props.name}</h3>
+                <form onSubmit={testPassword}>
+                    <input
+                        placeholder='Digite a senha.'
+                        onChange={ev => setInputPassword(ev.target.value)}
+                        value={inputPassword}
+                    />
+                    {showPasswordSpan && <span>Senha errada, verifique novamente.</span>}
+                    <Button className='options'>Entrar</Button>
+                </form>
+            </Modal>
         </div>
     )
 };

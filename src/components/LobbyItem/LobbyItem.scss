@@ -29,6 +29,76 @@
 
 }
 
+.Modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 4rem;
+    border-radius: 4rem;
+    box-shadow: 0 0 2rem 0.5rem #FF5500;
+    background-color: #2E2E2E;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+
+    h3{
+        font-size: 2.4rem;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .closeModal{
+        align-self: flex-start;
+        background: transparent;
+        border: 1px solid red;
+        border-radius: 50%;
+        width: 3rem;
+        height: 3rem;
+        cursor: pointer;
+        transition: 0.2s ease;
+        &:hover{
+            border-radius: 25%;
+            transform: scale(1.2);
+        }
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        align-items: center;
+        width: 80%;
+
+        span{
+            text-align: center;
+            color: #F00;
+            text-shadow: 1px 1px black;
+            font-family: 'Syne Tactile', monospace;
+            font-size: 2rem;
+        }
+    }
+
+    input{
+        background: transparent;
+        width: 100%;
+        font-size: 1.6rem;
+        font-family: 'Roboto', sans-serif;
+        border-bottom: 1px solid #AAA;
+        outline: none;
+    }
+  }
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
 @media only screen and (max-width: 600px) {
     .lobbyItem {
         flex-direction: column;
