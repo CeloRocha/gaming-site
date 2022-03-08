@@ -6,6 +6,7 @@ import AuthPage from './pages/auth/AuthPage';
 import Thanks from './pages/games/thanks/Thanks';
 import Homepage from './pages/home/Homepage';
 import Lobbypage from './pages/lobby/Lobbypage';
+import RulesPage from './pages/rules/RulesPage';
 import SearchLobbyPage from './pages/searchLobby/SearchLobbyPage';
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
         <Routes>
           <Route path='/' exact element={<Homepage />} />
           <Route path='/login' exact element={<AuthPage />} />
+          <Route path='/rules' exact element={<RulesPage />} />
           <Route path='/lobby/:room' element={<Lobbypage />} />
           <Route path='/thanks/:room' element={<Thanks />} />
           <Route path='/search' element={<SearchLobbyPage />} />

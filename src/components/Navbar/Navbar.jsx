@@ -20,8 +20,8 @@ const Navbar = () => {
         </div>
         <nav>
             <Link to='/'>Home</Link>
-            <a href='#'>About</a>
-            <a href='#'>Games</a>
+            <Link to='/search'>Salas</Link>
+            <Link to='/rules'>Regras</Link>
             <a href='#'>Me</a>
 
         </nav>
