@@ -145,11 +145,13 @@ const Lobbypage = () => {
             .map(({value}) => value)
         const cardOnTable = cards.pop()
 
+        let startCoins = players.length < 6 ? 11 : 9;
+
         await set(ref(db, `/games/${room}`), {
             admin: admin,
             cards: cards,
             players: Object.fromEntries(players.map(player =>{
-                return [player[0], { avatar: player[1].avatar, name: player[1].name, coins: 11, cards: [] }]
+                return [player[0], { avatar: player[1].avatar, name: player[1].name, coins: startCoins, cards: [] }]
                 })),
             cardOnTable: {card: cardOnTable, coins: 0},
             currentPlayer: admin
@@ -163,7 +165,7 @@ const Lobbypage = () => {
     }
 
     if(isAdmin){
-        if(everyoneIsReady()){
+        if(everyoneIsReady() && players.length >= 3){
             startGame()
         }
     }else{

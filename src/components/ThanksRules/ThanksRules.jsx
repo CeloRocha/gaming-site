@@ -7,6 +7,7 @@ const ThanksRules = () => {
         <Title className='style'>No, Thanks!</Title>
 
         <h3>Visão geral</h3>
+        <p>São necessários pelo menos 3 jogadores.</p>
         <p>
           Neste jogo, você deve ganhar o mínimo de pontos possível. Cada carta vale seu valor de face.
           Você começa com uma mão de moedas. Essas moedas são subtraídas de sua pontuação total final,
