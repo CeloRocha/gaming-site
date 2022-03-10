@@ -9,3 +9,16 @@
         row-gap: 5rem;
     }
 }
+
+@media only screen and (max-width: 600px) {
+    .leaderboard {
+        .leaders{
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+        }
+        :nth-child(1){
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+    }
+}
