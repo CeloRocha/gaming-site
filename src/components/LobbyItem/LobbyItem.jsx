@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import './LobbyItem.scss'
 import { useAuth } from '../../hooks/useAuth';
 import Button from '../Button/Button';
-import Modal from 'react-modal';
 import lockImg from '../../assets/images/Lock.svg'
 import closeImg from '../../assets/images/Cross.svg'
+import Modal from 'react-modal';
 
 Modal.setAppElement('#root')
 

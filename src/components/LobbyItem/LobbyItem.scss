@@ -33,16 +33,16 @@
     position: absolute;
     top: 50%;
     left: 50%;
+    max-height: 75vh;
     transform: translate(-50%, -50%);
     padding: 4rem;
-    border-radius: 4rem;
     box-shadow: 0 0 2rem 0.5rem #FF5500;
     background-color: #2E2E2E;
     display: flex;
     flex-direction: column;
     gap: 2rem;
     align-items: center;
-
+    overflow-y: scroll;
     h3{
         font-size: 2.4rem;
         font-family: 'Roboto', sans-serif;
