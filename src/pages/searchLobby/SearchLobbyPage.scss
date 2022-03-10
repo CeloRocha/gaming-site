@@ -6,13 +6,17 @@
     width: 80vw;
     margin: auto;
 
+    .mobileSpan{
+        display: none;
+    }
+
     form{
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: space-around;
         background: rgba($color: #2f2f2f, $alpha: 0.7);
-        width: min(80%, 40rem);
+        width: min(80%, 70rem);
         min-height: 20rem;
         border-radius: 3rem;
 
@@ -107,7 +111,19 @@
 }
 
 @media only screen and (max-width: 600px) {
+
     .searchLobby-page {
         width: 100%;
+
+        .mobileSpan{
+            display: block;
+            margin: auto;
+            padding-bottom: 3rem ;
+            width: 80%;
+            text-align: justify;
+            color: rgb(255, 0, 0);
+            font-family: monospace;
+            font-size: 2.4rem;
+        }
     }
   }

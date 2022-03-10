@@ -73,6 +73,10 @@ const SearchLobbyPage = () => {
     return(
         <div className='searchLobby-page'>
             <Navbar />
+            <span className='mobileSpan'>
+                Os lobbys e jogos, não foram feitos para serem utilizados no celular,
+                recomenda-se que procure utilizar em telas maiores.
+            </span>
             <Title className='ready'>Crie uma sala:</Title>
             <form onSubmit={handleCreateRoom}>
                 <div>

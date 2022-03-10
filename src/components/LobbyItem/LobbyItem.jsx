@@ -51,10 +51,12 @@ const LobbyItem = (props) => {
         if(!user){
             navigate('/login')
         }else{
-            if(props.password != ''){
-                openModal()
-            }else{
-                enterRoom()
+            if(props.players < 6){
+                if(props.password != ''){
+                    openModal()
+                }else{
+                    enterRoom()
+                }
             }
         }
     }
