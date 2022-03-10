@@ -27,6 +27,7 @@ export function useGame(){
     const [ players, setPlayers ] = useState()
     const [ currentPlayer, setCurrentPlayer ] = useState('')
     const [ finish, setFinish ] = useState(false)
+    const [ quit, setQuit ] = useState(false)
 
     useEffect(() => {
         const roomRef = ref(db, `/games/${room}`);
@@ -39,6 +40,9 @@ export function useGame(){
                 setCards(roomData?.cards)
                 if(roomData?.finishGame){
                     setFinish(roomData.finishGame)
+                }
+                if(roomData?.quit){
+                    setQuit(roomData.quit)
                 }
             }
         })
@@ -178,6 +182,7 @@ export function useGame(){
         players,
         currentPlayer,
         finish,
+        quit,
         nextCard,
         putCoin,
         pickCard,

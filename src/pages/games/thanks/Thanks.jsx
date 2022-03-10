@@ -3,7 +3,7 @@ import './Thanks.scss'
 import './ThanksFinish.scss'
 import { useNavigate, useParams } from 'react-router';
 import { useAuth } from '../../../hooks/useAuth';
-import { onValue, ref, get, child, remove, update } from '@firebase/database';
+import { onValue, ref, get, child, remove, update, set } from '@firebase/database';
 import { db } from '../../../services/firebase';
 import { useGame } from '../../../hooks/useGame';
 import Button from '../../../components/Button/Button'
@@ -20,7 +20,7 @@ const Thanks = () => {
     const { room } = useParams();
     const { user, addVictory } = useAuth();
     const [ admin, setAdmin ] = useState();
-    const { players, currentPlayer, cards, cardOnTable, finish, nextCard, putCoin, pickCard} = useGame();
+    const { players, currentPlayer, cards, cardOnTable, finish, quit, nextCard, putCoin, pickCard} = useGame();
 
     useEffect(()=>{
         if(finish && isAdmin()){
@@ -31,6 +31,22 @@ const Thanks = () => {
         }
     }, [finish])
 
+
+    useEffect(()=>{
+        window.addEventListener('beforeunload', handleQuitGame)
+
+        return () => window.removeEventListener('beforeunload', handleQuitGame)
+    }, [room])
+
+    async function removeGameAndLobby(){
+        await remove(ref(db, `/rooms/${room}`));
+        await remove(ref(db, `/games/${room}`));
+    }
+
+    async function handleQuitGame(){
+        await set(ref(db, `/games/${room}/quit`), true)
+        removeGameAndLobby()
+    }
 
     async function getInfo(){
         const roomRef = ref(db, `/games`);
@@ -76,6 +92,10 @@ const Thanks = () => {
         return false
     }
 
+    function goToSearch(){
+        navigate('/search')
+    }
+
     async function quitGame(){
         if(isAdmin()){
             await remove(ref(db, `/games/${room}`))
@@ -90,6 +110,10 @@ const Thanks = () => {
         });
         updates['/inGame'] = false
         await update(ref(db, `/rooms/${room}`), updates)
+    }
+
+    if(quit){
+        removeGameAndLobby()
     }
 
 
@@ -111,67 +135,74 @@ const Thanks = () => {
 
     return(
         <div className='thanks-game-page'>
-            {finish
+            {quit
             ?
-            <div className='finish'>
-                <div className='finish-positions'>
-                {players.sort((playerA, playerB) => {
-                    return playerA[1].points - playerB[1].points
-                })
-                .map((player, index) => {
-                    return(
-                        <div className={`finish-player p${index}`}>
-                            {index === 0 && <Title>Winner:</Title>}
-                            <img src={player[1].avatar} alt={player[1].name} />
-                            <h1>{player[1].name}</h1>
-                            <span>Pontos: {player[1].points}.</span>
-                        </div>
-                    )
-                })}
+                <div className='gameQuitError'>
+                    <h1>Alguém saiu durante a partida...</h1>
+                    <Button onClick={goToSearch}>Voltar</Button>
                 </div>
-                <Button onClick={quitGame}>Go back to lobby</Button>
-            </div>
             :
-                !players 
+                finish
                 ?
-                    <Loading />
-                :
-                    <>
-                    <div className='current-card'>
-                        <Card number={cardOnTable.card}/>
-                        <div className="coins">{coins}</div>
-                    </div>
-                    {players
-                    .map( (player, index, players) => {
-                        let position = -1;
-                        if(index >= userIndex){
-                            position = index - userIndex
-                        }else{
-                            position = players.length + index - userIndex
-                        }
-                        return(
-                            <PlayerInGame
-                                avatar={player[1].avatar}
-                                name={player[1].name}
-                                cards={player[1].cards}
-                                current={player[0]===currentPlayer}
-                                position={position}
-                                coins={player[1].coins}
-                            />
-                        )
-                    })}
-                    
-                        <div className="options">
-                            {isYourTurn() &&
-                            <>
-                            {userPlayer[1].coins>0 &&
-                            <Button onClick={handlePutCoin} >Put Coin</Button>
-                            }
-                            <Button onClick={handlePickCard} >Pick Card</Button>
-                            </>
-                            }   
+                    <div className='finish'>
+                        <div className='finish-positions'>
+                        {players.sort((playerA, playerB) => {
+                            return playerA[1].points - playerB[1].points
+                        })
+                        .map((player, index) => {
+                            return(
+                                <div className={`finish-player p${index}`}>
+                                    {index === 0 && <Title>Winner:</Title>}
+                                    <img src={player[1].avatar} alt={player[1].name} />
+                                    <h1>{player[1].name}</h1>
+                                    <span>Pontos: {player[1].points}.</span>
+                                </div>
+                            )
+                        })}
                         </div>
-                    </>
+                        <Button onClick={quitGame}>Go back to lobby</Button>
+                    </div>
+                :
+                    !players 
+                    ?
+                        <Loading />
+                    :
+                        <>
+                        <div className='current-card'>
+                            <Card number={cardOnTable.card}/>
+                            <div className="coins">{coins}</div>
+                        </div>
+                        {players
+                        .map( (player, index, players) => {
+                            let position = -1;
+                            if(index >= userIndex){
+                                position = index - userIndex
+                            }else{
+                                position = players.length + index - userIndex
+                            }
+                            return(
+                                <PlayerInGame
+                                    avatar={player[1].avatar}
+                                    name={player[1].name}
+                                    cards={player[1].cards}
+                                    current={player[0]===currentPlayer}
+                                    position={position}
+                                    coins={player[1].coins}
+                                />
+                            )
+                        })}
+                        
+                            <div className="options">
+                                {isYourTurn() &&
+                                <>
+                                {userPlayer[1].coins>0 &&
+                                <Button onClick={handlePutCoin} >Put Coin</Button>
+                                }
+                                <Button onClick={handlePickCard} >Pick Card</Button>
+                                </>
+                                }   
+                            </div>
+                        </>
                 
             }
         </div>  
